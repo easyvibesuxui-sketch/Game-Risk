@@ -5,6 +5,9 @@ import { CONTINENTS, TERRITORIES, TERRITORY_BY_ID, areNeighbors, continentTerrit
 
 export type Phase = "setup" | "draft" | "attack" | "occupy" | "fortify" | "gameover";
 
+export type Difficulty = "easy" | "medium" | "hard";
+export const DIFFICULTIES: Difficulty[] = ["easy", "medium", "hard"];
+
 export interface Player {
   id: number;
   name: string;
@@ -29,6 +32,7 @@ export interface Battle {
 
 export interface GameState {
   version: 1;
+  difficulty: Difficulty;
   turn: number;
   players: Player[];
   owner: Record<string, number>;
@@ -41,6 +45,8 @@ export interface GameState {
   discard: Card[];
   trades: number;
   conquered: boolean;
+  /** Territories the current player has taken this turn. */
+  captures: number;
   occupy: { from: string; to: string; min: number; max: number } | null;
   /** After an elimination hands over 6+ cards, trading happens mid-attack. */
   resumeAttack: boolean;
@@ -74,12 +80,18 @@ export function reinforcements(s: GameState, player: number): number {
   return Math.max(3, Math.floor(count / 3)) + bonus;
 }
 
+export interface CreateOptions {
+  difficulty?: Difficulty;
+  rng?: Rng;
+}
+
 export function create(
   name: string,
   opponents: number,
   faction: FactionId,
-  rng: Rng = Math.random,
+  { difficulty = "medium", rng = Math.random }: CreateOptions = {},
 ): GameState {
+  if (!DIFFICULTIES.includes(difficulty)) throw new Error(`Unknown difficulty ${difficulty}.`);
   if (!Number.isInteger(opponents) || opponents < 1 || opponents > FACTIONS.length - 1) {
     throw new Error(`Choose between 1 and ${FACTIONS.length - 1} opponents.`);
   }
@@ -113,6 +125,7 @@ export function create(
 
   let s: GameState = {
     version: 1,
+    difficulty,
     turn: 0,
     players,
     owner,
@@ -124,6 +137,7 @@ export function create(
     discard: [],
     trades: 0,
     conquered: false,
+    captures: 0,
     occupy: null,
     resumeAttack: false,
     lastBattle: null,
@@ -240,7 +254,7 @@ export function attack(s: GameState, from: string, to: string, dice: number, rng
 
   const owner = { ...s.owner, [to]: s.current };
   next = withLog(
-    { ...next, owner, conquered: true },
+    { ...next, owner, conquered: true, captures: next.captures + 1 },
     `${playerName(s, s.current)} takes ${TERRITORY_BY_ID[to].name} from ${playerName(s, defender)}.`,
   );
 
@@ -356,6 +370,7 @@ function beginTurn(s: GameState, player: number): GameState {
       phase: "draft",
       reserve,
       conquered: false,
+      captures: 0,
       occupy: null,
       resumeAttack: false,
     },

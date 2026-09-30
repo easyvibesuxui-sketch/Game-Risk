@@ -150,14 +150,29 @@ button {
 .title-head {
   text-align: center;
 }
+.cartouche {
+  position: relative;
+  width: min(560px, 100%);
+  aspect-ratio: 1100 / 601;
+  margin: 0 auto -8px;
+  background-size: cover;
+  background-position: center;
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at center, #000 72%, transparent 100%);
+  mask-image: radial-gradient(ellipse 50% 50% at center, #000 72%, transparent 100%);
+  display: grid;
+  place-items: center;
+}
 .title-head h1 {
   font-family: var(--serif);
   font-weight: 700;
-  font-size: clamp(2.6rem, 8vw, 4.6rem);
+  font-size: clamp(2rem, 7vw, 3.7rem);
   line-height: 1;
-  margin: 0.2rem 0 0.4rem;
+  margin: 0;
+  /* Sits on the blank scroll of the cartouche. */
+  transform: translateY(18%);
   color: var(--crimson);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
+  text-shadow: 0 1px 0 rgba(255, 248, 230, 0.8);
 }
 .lede {
   margin: 0;
@@ -247,6 +262,14 @@ button {
   padding: 0.45rem 0.7rem;
   width: 15rem;
   max-width: 100%;
+}
+.difficulty-note {
+  text-align: center;
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+  font-style: italic;
+  font-family: var(--serif);
+  color: var(--ink-soft);
 }
 .title-actions {
   display: flex;
@@ -699,7 +722,179 @@ button {
   }
 }
 
+/* Films */
+.cinematic {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: #000;
+  color: #f6ecd2;
+  overflow: hidden;
+  animation: fade-in 0.6s ease-out;
+}
+.cinematic video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.cinematic-shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent 22%, transparent 70%, rgba(0, 0, 0, 0.7)),
+    radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.55));
+}
+.cinematic-controls {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+.btn.light {
+  color: #f6ecd2;
+  border-color: rgba(246, 236, 210, 0.55);
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(4px);
+}
+.btn.light:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.55);
+}
+.eyebrow.light {
+  color: rgba(246, 236, 210, 0.8);
+}
+.intro-title {
+  position: absolute;
+  left: 50%;
+  top: 9%;
+  transform: translateX(-50%);
+  text-align: center;
+  animation: title-rise 2.4s ease-out 0.4s both;
+}
+.intro-title h1 {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: clamp(2.8rem, 9vw, 6.5rem);
+  letter-spacing: 0.08em;
+  margin: 0.1em 0 0;
+  color: #f6ecd2;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.8), 0 0 60px rgba(176, 138, 58, 0.45);
+}
+.intro-progress {
+  position: absolute;
+  left: 16px;
+  bottom: 30px;
+  width: min(260px, 40vw);
+  height: 3px;
+  background: rgba(246, 236, 210, 0.2);
+}
+.intro-progress span {
+  display: block;
+  height: 100%;
+  background: var(--brass);
+  transition: width 0.3s;
+}
+.victory {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px 16px 72px;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 1.4s ease-out, transform 1.4s ease-out;
+  pointer-events: none;
+}
+.victory.show {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.cinematic.revealed .cinematic-shade {
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.75));
+  transition: background 1.4s;
+}
+.victory-standard {
+  position: relative;
+  margin-bottom: 30px;
+}
+.victory-portrait {
+  width: clamp(110px, 16vw, 170px);
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border: 3px solid #f6ecd2;
+  box-shadow: 0 0 0 4px var(--c), 0 0 60px rgba(255, 210, 120, 0.55);
+}
+.victory-emblem {
+  position: absolute;
+  right: -26px;
+  bottom: -18px;
+  width: 64px;
+  height: 64px;
+  border: 2px solid #f6ecd2;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
+}
+.victory h1 {
+  font-family: var(--serif);
+  font-size: clamp(2.2rem, 6vw, 4.2rem);
+  margin: 0.15em 0 0.2em;
+  color: #fbe7b0;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.8), 0 0 50px rgba(255, 200, 90, 0.5);
+}
+.victory-line {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  max-width: 34rem;
+}
+.victory-stats {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+  padding: 0;
+  margin: 18px 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.75rem;
+}
+.victory-stats strong {
+  display: block;
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #fbe7b0;
+}
+.victory-fallen {
+  margin: 0 0 18px;
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes title-rise {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 18px);
+    letter-spacing: 0.3em;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .intro-title,
+  .cinematic {
+    animation: none;
+  }
   .territory.target .land-edge {
     animation: none;
   }

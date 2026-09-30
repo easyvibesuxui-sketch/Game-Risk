@@ -26,7 +26,7 @@ export function loadGame(): GameState | null {
       localStorage.removeItem(SAVE_KEY);
       return null;
     }
-    return s;
+    return { ...s, difficulty: s.difficulty ?? "medium", captures: s.captures ?? 0 };
   } catch {
     return null;
   }

@@ -64,7 +64,7 @@ describe("cards", () => {
 
 describe("engine", () => {
   it("deals every territory and gives the human the right reserve", () => {
-    const s = create("Tester", 2, "elves", seeded(1));
+    const s = create("Tester", 2, "elves", { rng: seeded(1) });
     expect(Object.keys(s.owner)).toHaveLength(42);
     expect(s.phase).toBe("setup");
     expect(s.reserve).toBe(STARTING_ARMIES[3] - territoriesOf(s, 0).length);
@@ -75,7 +75,7 @@ describe("engine", () => {
   });
 
   it("moves from setup to the first draft once the reserve is placed", () => {
-    let s = create("Tester", 1, "humans", seeded(2));
+    let s = create("Tester", 1, "humans", { rng: seeded(2) });
     const mine = territoriesOf(s, 0)[0];
     const before = s.armies[mine];
     s = placeArmies(s, mine, 1);
@@ -86,13 +86,13 @@ describe("engine", () => {
   });
 
   it("rejects placing on an enemy territory", () => {
-    const s = create("Tester", 1, "humans", seeded(3));
+    const s = create("Tester", 1, "humans", { rng: seeded(3) });
     const theirs = territoriesOf(s, 1)[0];
     expect(() => placeArmies(s, theirs)).toThrow();
   });
 
   it("fortifies only along a friendly path", () => {
-    let s = create("Tester", 1, "orcs", seeded(4));
+    let s = create("Tester", 1, "orcs", { rng: seeded(4) });
     s = placeArmies(s, territoriesOf(s, 0)[0], s.reserve);
     s = placeArmies(s, territoriesOf(s, 0)[0], s.reserve);
     s = endAttack(s);
@@ -103,13 +103,14 @@ describe("engine", () => {
     if (stranger && isolated) expect(() => fortify(s, from, stranger, 1)).toThrow();
   });
 
-  it("finishes an all-AI campaign with one winner", () => {
+  function autoplay(difficulty: GameState["difficulty"], maxSteps: number) {
     const rng = seeded(7);
-    let s: GameState = create("Tester", 4, "dwarves", rng);
+    let s: GameState = create("Tester", 4, "dwarves", { rng, difficulty });
+    expect(s.difficulty).toBe(difficulty);
     s = { ...s, players: s.players.map((p) => ({ ...p, human: false })) };
     s = placeArmies(s, territoriesOf(s, 0)[0], s.reserve);
     let steps = 0;
-    while (s.phase !== "gameover" && steps < 60000) {
+    while (s.phase !== "gameover" && steps < maxSteps) {
       const next = aiStep(s, rng);
       expect(next).not.toBeNull();
       s = next!;
@@ -117,12 +118,21 @@ describe("engine", () => {
       const total = Object.values(s.armies);
       expect(total.every((a) => a >= 1 || s.phase === "occupy")).toBe(true);
     }
+    return s;
+  }
+
+  it.each(["medium", "hard"] as const)("finishes an all-AI %s campaign", (difficulty) => {
     // The human (player 0) falling also ends the campaign.
-    expect(s.phase).toBe("gameover");
+    expect(autoplay(difficulty, 60000).phase).toBe("gameover");
+  });
+
+  it("keeps an all-easy table moving", () => {
+    // Five timid rivals trade lands back and forth; the human is the one who ends it.
+    expect(autoplay("easy", 8000).turn).toBeGreaterThan(20);
   });
 
   it("an attack never leaves the attacker below one army", () => {
-    let s = create("Tester", 1, "northmen", seeded(9));
+    let s = create("Tester", 1, "northmen", { rng: seeded(9) });
     s = placeArmies(s, territoriesOf(s, 0)[0], s.reserve);
     const from = territoriesOf(s, 0).find((t) => TERRITORY_BY_ID[t].neighbors.some((n) => s.owner[n] === 1))!;
     s = placeArmies(s, from, s.reserve);

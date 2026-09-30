@@ -121,7 +121,15 @@ function BoardImpl({ state, selected, targets, onPick }: BoardProps) {
 
       {/* Sea */}
       <rect width={W} height={H} fill="var(--sea)" />
-      <rect width={W} height={H} fill="url(#stipple)" />
+      <image
+        href={atlasUrl("sea.jpg")}
+        width={W}
+        height={H}
+        preserveAspectRatio="xMidYMid slice"
+        opacity="0.36"
+        pointerEvents="none"
+      />
+      <rect width={W} height={H} fill="url(#stipple)" opacity="0.6" />
 
       <g mask="url(#open-sea)">
         {LAT_LINES.map((l) => (
@@ -200,7 +208,18 @@ function BoardImpl({ state, selected, targets, onPick }: BoardProps) {
             </g>
           );
         })}
-        <rect width={W} height={H} filter="url(#paper)" pointerEvents="none" opacity="0.9" style={{ mixBlendMode: "multiply" }} mask="url(#land-only)" />
+        {/* Engraved terrain printed over the washes, like hills and woods on an atlas plate */}
+        <image
+          href={atlasUrl("terrain.jpg")}
+          width={W}
+          height={H}
+          preserveAspectRatio="xMidYMid slice"
+          mask="url(#land-only)"
+          opacity="0.62"
+          pointerEvents="none"
+          style={{ mixBlendMode: "multiply" }}
+        />
+        <rect width={W} height={H} filter="url(#paper)" pointerEvents="none" opacity="0.6" style={{ mixBlendMode: "multiply" }} mask="url(#land-only)" />
       </g>
 
       {/* Labels and army seals */}

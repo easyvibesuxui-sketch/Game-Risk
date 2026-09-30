@@ -14,6 +14,7 @@ import {
   placeArmies,
   reachable,
   tradeCards,
+  type Difficulty,
   type GameState as Game,
 } from "../game/engine";
 import { FACTION_BY_ID, portraitUrl, type FactionId } from "../game/factions";
@@ -21,13 +22,16 @@ import { TERRITORY_BY_ID } from "../game/map";
 import { loadGame, loadMute, saveGame, saveMute } from "../game/storage";
 import { Board } from "./Board";
 import { Sidebar, type PlaceAmount } from "./Sidebar";
+import { Intro } from "./Intro";
 import { TitleScreen } from "./TitleScreen";
+import { Victory } from "./Victory";
 
 const AI_DELAY = { draft: 420, attack: 260, occupy: 200, fortify: 380 } as Record<string, number>;
 
 export function Campaign() {
   const [state, setState] = useState<Game | null>(null);
   const [booted, setBooted] = useState(false);
+  const [introDone, setIntroDone] = useState(false);
   const [saved, setSaved] = useState<Game | null>(null);
   const [startError, setStartError] = useState<string | null>(null);
   const [selectedCards, setSelectedCards] = useState<string[]>([]);
@@ -92,11 +96,11 @@ export function Campaign() {
     }
   };
 
-  const onStart = (name: string, opponents: number, faction: FactionId) => {
+  const onStart = (name: string, opponents: number, faction: FactionId, difficulty: Difficulty) => {
     unlockAudio();
     setStartError(null);
     try {
-      const s = GameState.create(name, opponents, faction);
+      const s = GameState.create(name, opponents, faction, { difficulty });
       resetSelection();
       setSelectedCards([]);
       setPlace(1);
@@ -196,6 +200,8 @@ export function Campaign() {
     return new Set<string>();
   }, [state, selected, myTurn]);
 
+  if (!introDone) return <Intro onDone={() => setIntroDone(true)} />;
+
   if (!booted || !state) {
     return (
       <TitleScreen
@@ -225,15 +231,14 @@ export function Campaign() {
             </span>
           </div>
         )}
-        {state.phase === "gameover" && (
+        {state.phase === "gameover" && state.winner === 0 && <Victory state={state} onNew={() => setState(null)} />}
+        {state.phase === "gameover" && state.winner !== 0 && (
           <div className="gameover">
             <div className="gameover-card">
               <img src={portraitUrl(state.players[state.winner ?? 0].faction)} alt="" />
-              <h2>{state.winner === 0 ? "The world is yours" : "Your realm has fallen"}</h2>
+              <h2>Your realm has fallen</h2>
               <p>
-                {state.winner === 0
-                  ? `${state.players[0].name} of the ${FACTION_BY_ID[state.players[0].faction].name} rules all forty-two lands.`
-                  : `${state.players[state.winner ?? 0].name} of the ${FACTION_BY_ID[state.players[state.winner ?? 0].faction].name} took your last land.`}
+                {`${state.players[state.winner ?? 0].name} of the ${FACTION_BY_ID[state.players[state.winner ?? 0].faction].name} took your last land.`}
               </p>
               <button type="button" className="btn primary" onClick={() => setState(null)}>
                 New campaign

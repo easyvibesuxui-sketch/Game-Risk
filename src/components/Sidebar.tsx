@@ -106,7 +106,9 @@ export function Sidebar(p: Props) {
         <div>
           <p className="eyebrow">{faction.realm}</p>
           <h2>{me.name}</h2>
-          <p className="turn-line">Turn {s.turn}</p>
+          <p className="turn-line">
+            Turn {s.turn} · {s.difficulty[0].toUpperCase() + s.difficulty.slice(1)}
+          </p>
         </div>
       </header>
 
