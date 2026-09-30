@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ka">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sovereign — მითიური ატლასი</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Noto+Sans+Georgian:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #efe4c8;
+    --paper-deep: #e2d2ab;
+    --ink: #2f2418;
+    --ink-soft: #6b5a44;
+    --crimson: #9a2f2f;
+    --sea: #9fb5b0;
+    --elf: #6fa86a;
+    --orc: #c2553d;
+    --human: #d9b441;
+    --dwarf: #7c93b8;
+    --north: #a9c6d8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    background-image: radial-gradient(ellipse at 50% 0%, #f6eed8 0%, var(--paper) 55%, var(--paper-deep) 100%);
+    color: var(--ink);
+    font-family: "Noto Sans Georgian", system-ui, sans-serif;
+    line-height: 1.5;
+  }
+  .frame {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 32px 16px 64px;
+  }
+  header { text-align: center; margin-bottom: 36px; }
+  header h1 {
+    font-family: Fraunces, Georgia, serif;
+    font-size: clamp(2rem, 6vw, 3.4rem);
+    letter-spacing: .04em;
+    margin: 0;
+    color: var(--crimson);
+  }
+  header p { margin: 6px 0 0; color: var(--ink-soft); }
+  .rule {
+    height: 10px;
+    margin: 18px auto 0;
+    max-width: 420px;
+    background: repeating-linear-gradient(90deg, var(--crimson) 0 10px, #c9a64a 10px 20px);
+    border: 1px solid var(--ink);
+  }
+  h2 {
+    font-family: Fraunces, Georgia, serif;
+    font-size: 1.5rem;
+    margin: 48px 0 16px;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 35%, transparent);
+    padding-bottom: 6px;
+  }
+  .races {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 18px;
+  }
+  .race {
+    background: #f7f0dc;
+    border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+    border-top: 6px solid var(--c);
+    box-shadow: 0 2px 8px rgba(60, 40, 10, .12);
+    display: flex;
+    flex-direction: column;
+  }
+  .race img.portrait { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; }
+  .race .meta { display: flex; gap: 10px; align-items: center; padding: 10px 12px 14px; }
+  .race .meta img { width: 54px; height: 54px; flex: none; border: 1px solid color-mix(in srgb, var(--ink) 25%, transparent); }
+  .race h3 { font-family: Fraunces, Georgia, serif; margin: 0; font-size: 1.15rem; }
+  .race span { color: var(--ink-soft); font-size: .85rem; }
+  .emblems {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 14px;
+  }
+  .emblems figure { margin: 0; text-align: center; }
+  .emblems img { width: 100%; display: block; border: 1px solid color-mix(in srgb, var(--ink) 25%, transparent); }
+  figcaption { font-size: .85rem; color: var(--ink-soft); margin-top: 6px; }
+  .sea {
+    background: var(--sea);
+    background-image: radial-gradient(color-mix(in srgb, var(--ink) 18%, transparent) 1px, transparent 1.2px);
+    background-size: 7px 7px;
+    border: 1px solid var(--ink);
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    align-items: center;
+  }
+  .sea figure { margin: 0; text-align: center; }
+  .sea img { max-width: 100%; max-height: 190px; }
+  .sea figcaption { color: var(--ink); }
+  .map img { width: 100%; display: block; border: 1px solid var(--ink); }
+  .note { font-size: .9rem; color: var(--ink-soft); margin-top: 8px; }
+  footer { margin-top: 56px; text-align: center; font-size: .8rem; color: var(--ink-soft); }
+</style>
+</head>
+<body>
+<div class="frame">
+  <header>
+    <h1>Sovereign</h1>
+    <p>მითიური ატლასი — ხუთი ხალხი, ერთი სამყარო</p>
+    <div class="rule"></div>
+  </header>
+
+  <h2>ხალხები</h2>
+  <div class="races">
+    <article class="race" style="--c: var(--elf)">
+      <img class="portrait" src="public/atlas/mythic/portrait-elf.jpg" alt="ელფი მშვილდოსანი" loading="lazy">
+      <div class="meta"><img src="public/atlas/mythic/emblem-elf.jpg" alt=""><div><h3>ელფები</h3><span>ტყის სამეფო</span></div></div>
+    </article>
+    <article class="race" style="--c: var(--orc)">
+      <img class="portrait" src="public/atlas/mythic/portrait-orc.jpg" alt="ორკების ბელადი" loading="lazy">
+      <div class="meta"><img src="public/atlas/mythic/emblem-orc.jpg" alt=""><div><h3>ორკები</h3><span>დამწვარი მიწები</span></div></div>
+    </article>
+    <article class="race" style="--c: var(--human)">
+      <img class="portrait" src="public/atlas/mythic/portrait-human.jpg" alt="ადამიანების მეფე-რაინდი" loading="lazy">
+      <div class="meta"><img src="public/atlas/mythic/emblem-human.jpg" alt=""><div><h3>ადამიანები</h3><span>გალავნიანი სამეფოები</span></div></div>
+    </article>
+    <article class="race" style="--c: var(--dwarf)">
+      <img class="portrait" src="public/atlas/mythic/portrait-dwarf.jpg" alt="ჯუჯების ბელადი" loading="lazy">
+      <div class="meta"><img src="public/atlas/mythic/emblem-dwarf.jpg" alt=""><div><h3>ჯუჯები</h3><span>მთის ციხეები</span></div></div>
+    </article>
+    <article class="race" style="--c: var(--north)">
+      <img class="portrait" src="public/atlas/mythic/portrait-north.jpg" alt="ჩრდილოელი იარლი" loading="lazy">
+      <div class="meta"><img src="public/atlas/mythic/emblem-north.jpg" alt=""><div><h3>ჩრდილოელები</h3><span>ყინულის ფიორდები</span></div></div>
+    </article>
+  </div>
+
+  <h2>ემბლემები</h2>
+  <div class="emblems">
+    <figure><img src="public/atlas/mythic/emblem-elf.jpg" alt="ელფების ემბლემა" loading="lazy"><figcaption>ვერცხლის ხე</figcaption></figure>
+    <figure><img src="public/atlas/mythic/emblem-orc.jpg" alt="ორკების ემბლემა" loading="lazy"><figcaption>თავის ქალა და ცულები</figcaption></figure>
+    <figure><img src="public/atlas/mythic/emblem-human.jpg" alt="ადამიანების ემბლემა" loading="lazy"><figcaption>გვირგვინიანი ლომი</figcaption></figure>
+    <figure><img src="public/atlas/mythic/emblem-dwarf.jpg" alt="ჯუჯების ემბლემა" loading="lazy"><figcaption>ურო და გრდემლი</figcaption></figure>
+    <figure><img src="public/atlas/mythic/emblem-north.jpg" alt="ჩრდილოელების ემბლემა" loading="lazy"><figcaption>ყორანი და ხომალდი</figcaption></figure>
+  </div>
+
+  <h2>ზღვის ორნამენტები</h2>
+  <div class="sea">
+    <figure><img src="public/atlas/mythic/serpent.png" alt="ზღვის გველი" loading="lazy"><figcaption>ზღვის გველი</figcaption></figure>
+    <figure><img src="public/atlas/mythic/galleon.png" alt="გალეონი" loading="lazy"><figcaption>გალეონი</figcaption></figure>
+    <figure><img src="public/atlas/mythic/compass.png" alt="კომპასი" loading="lazy"><figcaption>კომპასი</figcaption></figure>
+    <figure><img src="public/atlas/mythic/leviathan.png" alt="ლევიათანი" loading="lazy"><figcaption>ლევიათანი</figcaption></figure>
+  </div>
+
+  <h2>რუკა — პირველი ცდა</h2>
+  <div class="map"><img src="public/atlas/mythic/world-map.jpg" alt="ატლასის რუკა, პირველი ცდა" loading="lazy"></div>
+  <p class="note">ეს ცდა ნამდვილ დედამიწად გამოვიდა, მოგონილ სამყაროდ არა. თავიდან დასაგენერირებელია.</p>
+
+  <footer>სურათები: Kling · ძველი ატლასის გრავიურის სტილი</footer>
+</div>
+</body>
+</html>
